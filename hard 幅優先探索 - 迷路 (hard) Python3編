@@ -1,0 +1,51 @@
+#追加問題　幅優先探索 - 迷路 (hard) Python3編
+import heapq
+
+class State:
+    def __init__(self, x, y,cost):
+        self.x = x
+        self.y = y
+        self.cost = cost
+        
+    def __lt__(self, state):
+        return self.cost < state.cost
+        
+    def __hash__(self):
+        return hash(self.x, self.y)
+
+    def __eq__(self, state):
+        return self.x == state.x and \
+            self.y == state.y
+            
+
+def dijkstra():
+    dy = [0, 1, 0, -1]
+    dx = [1, 0, -1, 0]
+    sy=0
+    sx=0
+    gy=h-1
+    gx=w-1
+    openque = []
+    closedque = set()
+    state = State(sx, sy,1)
+    heapq.heappush(openque, state)
+    while len(openque) > 0:
+        state = heapq.heappop(openque)
+        if state in closedque:
+            continue
+        closedque.add(state)
+        if  state.y == gy and state.x == gx:
+            return state.cost
+        for i in range(4):
+            nx = state.x + dx[i]
+            ny = state.y + dy[i]
+            if nx < 0 or w <= nx or ny < 0 or h <= ny or t[ny][nx]==1:
+                continue
+            ncost = state.cost + 1
+            heapq.heappush(openque, State(nx, ny, ncost))
+
+h, w = map(int, input().split())
+t= [list(map(int,input().split())) for i in range(h)]
+
+
+print(dijkstra())
